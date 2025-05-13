@@ -19,6 +19,8 @@
 
         body {
             margin: 0;
+            padding: 0;
+            font-size: 14px; /* Reducir el tamaño de la fuente */
             background-color: #f5f5f5; /* Color suave */
         }
 
@@ -27,8 +29,35 @@
         }
 
         .container {
+            max-width: 800px; /* Reducir el ancho del contenedor */
+            margin: 0 auto;
+            padding: 10px; /* Reducir el relleno */
             position: relative;
             z-index: 1;
+        }
+
+        h1 {
+            font-size: 24px; /* Reducir el tamaño del título */
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-size: 12px; /* Reducir el tamaño de las etiquetas */
+        }
+
+        .form-control {
+            font-size: 12px; /* Reducir el tamaño de los campos de entrada */
+            padding: 5px; /* Reducir el relleno de los campos */
+        }
+
+        .btn {
+            font-size: 12px; /* Reducir el tamaño de los botones */
+            padding: 5px 10px; /* Reducir el relleno de los botones */
+        }
+
+        .card {
+            font-size: 12px; /* Reducir el tamaño del texto en las tarjetas */
+            margin-bottom: 10px; /* Reducir el margen entre tarjetas */
         }
     </style>
 </head>
@@ -91,6 +120,7 @@
 
         const particles = [];
 
+        // Update particle visibility
         class Particle {
             constructor(x, y, size, speedX, speedY) {
                 this.x = x;
@@ -111,18 +141,21 @@
             draw() {
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+                ctx.fillStyle = 'rgba(255, 255, 255, 1)'; // Increase opacity for visibility
+                ctx.shadowBlur = 10; // Add glow effect
+                ctx.shadowColor = 'white';
                 ctx.fill();
             }
         }
 
         function initParticles() {
-            for (let i = 0; i < 100; i++) {
-                const size = Math.random() * 3 + 1;
+            particles.length = 0; // Clear existing particles
+            for (let i = 0; i < 150; i++) { // Increase particle count
+                const size = Math.random() * 5 + 2; // Increase particle size
                 const x = Math.random() * canvas.width;
                 const y = Math.random() * canvas.height;
-                const speedX = (Math.random() - 0.5) * 2;
-                const speedY = (Math.random() - 0.5) * 2;
+                const speedX = (Math.random() - 0.5) * 3; // Increase speed
+                const speedY = (Math.random() - 0.5) * 3;
                 particles.push(new Particle(x, y, size, speedX, speedY));
             }
         }
@@ -144,6 +177,14 @@
             canvas.height = window.innerHeight;
             particles.length = 0;
             initParticles();
+        });
+
+        document.querySelectorAll('.card').forEach(card => {
+            card.style.position = '';
+            card.style.cursor = '';
+
+            card.removeEventListener('mousedown', () => {});
+            card.removeEventListener('dblclick', () => {});
         });
     </script>
 </body>

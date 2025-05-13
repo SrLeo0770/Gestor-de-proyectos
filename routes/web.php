@@ -11,3 +11,4 @@ Route::resource('projects', ProjectController::class);
 
 Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
 Route::post('/projects', [ProjectController::class, 'store'])->name('projects.store');
+Route::get('/projects/view', [ProjectController::class, 'view'])->name('projects.view');

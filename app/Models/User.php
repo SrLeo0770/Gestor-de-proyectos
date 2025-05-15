@@ -6,6 +6,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -21,6 +24,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role_id',
+        'phone',
+        'position',
     ];
 
     /**
@@ -38,11 +44,53 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-    protected function casts(): array
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
+
+    public function role(): BelongsTo
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->belongsTo(Role::class);
+    }
+
+    public function ledProjects(): HasMany
+    {
+        return $this->hasMany(Project::class, 'leader_id');
+    }
+
+    public function clientProjects(): HasMany
+    {
+        return $this->hasMany(Project::class, 'client_id');
+    }
+
+    public function teamProjects(): BelongsToMany
+    {
+        return $this->belongsToMany(Project::class, 'project_team')->withTimestamps();
+    }
+
+    public function audits(): HasMany
+    {
+        return $this->hasMany(ProjectAudit::class, 'auditor_id');
+    }
+
+    public function isProjectLeader(): bool
+    {
+        return $this->role->slug === 'project_leader';
+    }
+
+    public function isTeamMember(): bool
+    {
+        return $this->role->slug === 'team_member';
+    }
+
+    public function isClient(): bool
+    {
+        return $this->role->slug === 'client';
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role->slug === 'admin';
     }
 }

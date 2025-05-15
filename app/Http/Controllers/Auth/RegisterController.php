@@ -21,7 +21,7 @@ class RegisterController extends Controller
 
     public function showRegistrationForm()
     {
-        $roles = Role::whereIn('slug', ['team_member', 'project_leader', 'client'])->get();
+        $roles = Role::whereIn('slug', ['project_leader', 'team_member'])->get();
         return view('auth.register', compact('roles'));
     }
 
@@ -34,6 +34,9 @@ class RegisterController extends Controller
             'role_id' => ['required', 'exists:roles,id'],
             'phone' => ['required', 'string', 'max:20'],
             'position' => ['required', 'string', 'max:100'],
+        ], [
+            'role_id.exists' => 'El rol seleccionado no es válido.',
+            'role_id.required' => 'Debe seleccionar un rol.',
         ]);
     }
 
@@ -44,6 +47,13 @@ class RegisterController extends Controller
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
+                ->withInput();
+        }
+
+        $role = Role::find($request->role_id);
+        if (!in_array($role->slug, ['project_leader', 'team_member'])) {
+            return redirect()->back()
+                ->withErrors(['role_id' => 'El rol seleccionado no está permitido para registro.'])
                 ->withInput();
         }
 

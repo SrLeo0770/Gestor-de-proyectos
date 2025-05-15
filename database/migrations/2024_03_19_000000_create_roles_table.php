@@ -16,15 +16,33 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
+            $table->text('description')->nullable();
             $table->timestamps();
         });
 
         // Insert basic roles
         DB::table('roles')->insert([
-            ['name' => 'Administrador', 'slug' => 'admin', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Líder de Proyecto', 'slug' => 'project_leader', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Miembro del Equipo', 'slug' => 'team_member', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Cliente', 'slug' => 'client', 'created_at' => now(), 'updated_at' => now()],
+            [
+                'name' => 'Líder de Proyecto',
+                'slug' => 'project_leader',
+                'description' => 'Control total sobre proyectos y gestión de equipo',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'name' => 'Miembro del Equipo',
+                'slug' => 'team_member',
+                'description' => 'Puede ver y participar en proyectos asignados',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'name' => 'Cliente',
+                'slug' => 'client',
+                'description' => 'Cliente del proyecto, solo puede ser creado por un líder',
+                'created_at' => now(),
+                'updated_at' => now()
+            ]
         ]);
     }
 

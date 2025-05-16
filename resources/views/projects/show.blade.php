@@ -4,95 +4,173 @@
 
 @section('content')
 <div class="container">
-    <div class="row">
-        <div class="col-md-8">
-            <div class="card shadow mb-4">
-                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h4 class="mb-0">{{ $project->name }}</h4>
-                    <span class="badge bg-light text-primary">
-                        @switch($project->status)
-                            @case('pending')
-                                Pendiente
-                                @break
-                            @case('in-progress')
-                                En Progreso
-                                @break
-                            @case('completed')
-                                Completado
-                                @break
-                            @default
-                                {{ $project->status }}
-                        @endswitch
-                    </span>
-                </div>
-                <div class="card-body">
-                    <div class="mb-4">
-                        <h5>Descripción</h5>
-                        <p>{{ $project->description }}</p>
-                    </div>
-
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <h5>Fechas</h5>
-                            <p><strong>Inicio:</strong> {{ $project->start_date->format('d/m/Y') }}</p>
-                            <p><strong>Fin:</strong> {{ $project->end_date->format('d/m/Y') }}</p>
-                        </div>
-                        <div class="col-md-6">
-                            <h5>Responsables</h5>
-                            <p><strong>Líder:</strong> {{ $project->leader->name }}</p>
-                            <p><strong>Cliente:</strong> {{ $project->client->name }}</p>
-                        </div>
-                    </div>
-
-                    <div class="mb-4">
-                        <h5>Equipo del Proyecto</h5>
-                        <div class="list-group">
-                            @foreach($project->teamMembers as $member)
-                                <div class="list-group-item">
-                                    <i class="fas fa-user"></i> {{ $member->name }}
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <div class="btn-group">
-                        <a href="{{ route('projects.edit', $project) }}" class="btn btn-primary">
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h2 class="mb-0">{{ $project->name }}</h2>
+                    <div>
+                        <a href="{{ route('projects.edit', $project) }}" class="btn btn-info me-2">
                             <i class="fas fa-edit"></i> Editar
                         </a>
-                        <form action="{{ route('projects.destroy', $project) }}" method="POST" class="d-inline">
+                        <form action="{{ route('projects.destroy', $project) }}" method="POST" class="d-inline"
+                              onsubmit="return confirm('¿Está seguro de eliminar este proyecto?');">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('¿Está seguro de eliminar este proyecto?')">
+                            <button type="submit" class="btn btn-danger">
                                 <i class="fas fa-trash"></i> Eliminar
                             </button>
                         </form>
-                        <a href="{{ route('projects.index') }}" class="btn btn-secondary">
-                            <i class="fas fa-arrow-left"></i> Volver
-                        </a>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="col-md-4">
-            <div class="card shadow">
-                <div class="card-header bg-info text-white">
-                    <h5 class="mb-0">Historial de Cambios</h5>
-                </div>
                 <div class="card-body">
-                    <div class="timeline">
-                        @foreach($project->audits->sortByDesc('created_at') as $audit)
-                            <div class="timeline-item mb-3">
-                                <div class="timeline-date text-muted">
-                                    {{ $audit->created_at->format('d/m/Y H:i') }}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4>Información General</h4>
+                            <table class="table">
+                                <tr>
+                                    <th>Tipo de Proyecto:</th>
+                                    <td>{{ $project->projectType->name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Categoría:</th>
+                                    <td>
+                                        <span class="badge" style="background-color: {{ $project->category->color }}">
+                                            {{ $project->category->name }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Líder:</th>
+                                    <td>{{ $project->leader->name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Cliente:</th>
+                                    <td>{{ $project->client->name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Estado:</th>
+                                    <td>
+                                        <span class="badge bg-{{ $project->status_color }}">
+                                            {{ $project->status_label }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Progreso:</th>
+                                    <td>
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar" 
+                                                 style="width: {{ $project->progress }}%"
+                                                 aria-valuenow="{{ $project->progress }}" 
+                                                 aria-valuemin="0" aria-valuemax="100">
+                                                {{ $project->progress }}%
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h4>Detalles del Proyecto</h4>
+                            <table class="table">
+                                <tr>
+                                    <th>Fecha de Inicio:</th>
+                                    <td>{{ $project->start_date->format('d/m/Y') }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Fecha de Finalización:</th>
+                                    <td>{{ $project->end_date->format('d/m/Y') }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Tiempo Estimado:</th>
+                                    <td>{{ $project->estimated_time }} horas</td>
+                                </tr>
+                                <tr>
+                                    <th>Tamaño del Equipo:</th>
+                                    <td>{{ $project->team_size }} personas</td>
+                                </tr>
+                                <tr>
+                                    <th>Última Auditoría:</th>
+                                    <td>{{ $project->last_audit ? $project->last_audit->format('d/m/Y H:i') : 'N/A' }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-md-12">
+                            <h4>Descripción</h4>
+                            <p class="card-text">{{ $project->description ?? 'Sin descripción' }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <h4>Recursos Necesarios</h4>
+                            @if($project->resources && count($project->resources) > 0)
+                                <ul class="list-group">
+                                    @foreach($project->resources as $resource)
+                                        <li class="list-group-item">{{ $resource }}</li>
+                                    @endforeach
+                                </ul>
+                            @else
+                                <p>No hay recursos especificados</p>
+                            @endif
+                        </div>
+
+                        <div class="col-md-6">
+                            <h4>Servicios Requeridos</h4>
+                            @if($project->services && count($project->services) > 0)
+                                <ul class="list-group">
+                                    @foreach($project->services as $service)
+                                        <li class="list-group-item">{{ $service }}</li>
+                                    @endforeach
+                                </ul>
+                            @else
+                                <p>No hay servicios especificados</p>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-md-12">
+                            <h4>Historial de Auditoría</h4>
+                            @if($project->audits->count() > 0)
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Fecha</th>
+                                                <th>Auditor</th>
+                                                <th>Acción</th>
+                                                <th>Detalles</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($project->audits as $audit)
+                                                <tr>
+                                                    <td>{{ $audit->created_at->format('d/m/Y H:i') }}</td>
+                                                    <td>{{ $audit->auditor->name }}</td>
+                                                    <td>{{ $audit->action }}</td>
+                                                    <td>{{ $audit->details }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <div class="timeline-content">
-                                    <strong>{{ $audit->auditor->name }}</strong>
-                                    <p class="mb-0">{{ $audit->details }}</p>
-                                </div>
-                            </div>
-                        @endforeach
+                            @else
+                                <p>No hay registros de auditoría</p>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <a href="{{ route('projects.index') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Volver al Listado
+                        </a>
                     </div>
                 </div>
             </div>

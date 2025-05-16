@@ -54,6 +54,11 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
+    public function teamMember()
+    {
+        return $this->hasOne(TeamMember::class);
+    }
+
     public function ledProjects(): HasMany
     {
         return $this->hasMany(Project::class, 'leader_id');
@@ -76,21 +81,21 @@ class User extends Authenticatable
 
     public function isProjectLeader(): bool
     {
-        return $this->role->slug === 'project_leader';
+        return $this->role && $this->role->slug === 'project_leader';
     }
 
     public function isTeamMember(): bool
     {
-        return $this->role->slug === 'team_member';
+        return $this->role && $this->role->slug === 'team_member';
     }
 
     public function isClient(): bool
     {
-        return $this->role->slug === 'client';
+        return $this->role && $this->role->slug === 'client';
     }
 
     public function isAdmin(): bool
     {
-        return $this->role->slug === 'admin';
+        return $this->role && $this->role->slug === 'admin';
     }
 }

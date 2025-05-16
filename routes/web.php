@@ -6,6 +6,10 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ClientController;
+use App\Http\Controllers\TeamMemberController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProjectTypeController;
 
 // Authentication Routes
 Route::middleware('guest')->group(function () {
@@ -31,10 +35,21 @@ Route::middleware('auth')->group(function () {
 
     // Report Routes
     Route::prefix('reports')->group(function () {
-        Route::get('/created', [ReportController::class, 'createdReports'])->name('reports.created');
         Route::get('/in-progress', [ReportController::class, 'inProgressReports'])->name('reports.inProgress');
         Route::get('/completed', [ReportController::class, 'completedReports'])->name('reports.completed');
         Route::get('/by-leader', [ReportController::class, 'reportsByLeader'])->name('reports.byLeader');
         Route::get('/by-client', [ReportController::class, 'reportsByClient'])->name('reports.byClient');
     });
+
+    // Rutas para clientes
+    Route::resource('clients', ClientController::class);
+    
+    // Rutas para miembros del equipo
+    Route::resource('team-members', TeamMemberController::class);
+
+    // Rutas para categorías
+    Route::resource('categories', CategoryController::class);
+
+    // Rutas para tipos de proyecto
+    Route::resource('project-types', ProjectTypeController::class);
 });

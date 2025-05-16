@@ -1,22 +1,14 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Gestor de Proyectos')</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    @stack('styles')
-</head>
-<body>
+@extends('layouts.base')
+
+@section('body')
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="{{ route('projects.index') }}">Gestor de Proyectos</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('projects.index') }}">
                             <i class="fas fa-home"></i> Inicio
@@ -30,15 +22,10 @@
                     </li>
                     @endif
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="reportsDropdown" role="button" data-bs-toggle="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="reportsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-chart-bar"></i> Reportes
                         </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a class="dropdown-item" href="{{ route('reports.created') }}">
-                                    <i class="fas fa-calendar-plus"></i> Proyectos Creados
-                                </a>
-                            </li>
+                        <ul class="dropdown-menu" aria-labelledby="reportsDropdown">
                             <li>
                                 <a class="dropdown-item" href="{{ route('reports.inProgress') }}">
                                     <i class="fas fa-tasks"></i> En Ejecución
@@ -73,17 +60,28 @@
                     </li>
                     @endif
                 </ul>
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user"></i> {{ Auth::user()->name }}
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div class="me-2">
+                                <i class="fas fa-user-circle fa-lg"></i>
+                            </div>
+                            <div>
+                                <span class="d-none d-md-inline">{{ Auth::user()->name }}</span>
+                            </div>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
+                        <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
+                            <li class="px-3 py-1 text-muted border-bottom">
+                                <small>Sesión iniciada como</small><br>
+                                <span class="fw-bold">{{ Auth::user()->name }}</span>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
                             <li>
-                                <form action="{{ route('logout') }}" method="POST">
+                                <form action="{{ route('logout') }}" method="POST" class="d-flex">
                                     @csrf
-                                    <button type="submit" class="dropdown-item">
-                                        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                                    <button type="submit" class="dropdown-item text-danger d-flex align-items-center">
+                                        <i class="fas fa-sign-out-alt fa-fw me-2"></i>
+                                        Cerrar Sesión
                                     </button>
                                 </form>
                             </li>
@@ -111,8 +109,4 @@
 
         @yield('content')
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    @stack('scripts')
-</body>
-</html> 
+@endsection 

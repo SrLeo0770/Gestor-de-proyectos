@@ -14,14 +14,24 @@ class Project extends Model
         'description',
         'leader_id',
         'client_id',
+        'project_type_id',
+        'category_id',
         'start_date',
         'end_date',
-        'status'
+        'status',
+        'progress',
+        'estimated_time',
+        'team_size',
+        'resources',
+        'services'
     ];
 
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',
+        'resources' => 'array',
+        'services' => 'array',
+        'progress' => 'integer'
     ];
 
     public function leader(): BelongsTo
@@ -32,6 +42,16 @@ class Project extends Model
     public function client(): BelongsTo
     {
         return $this->belongsTo(User::class, 'client_id');
+    }
+
+    public function projectType(): BelongsTo
+    {
+        return $this->belongsTo(ProjectType::class);
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
     }
 
     public function teamMembers(): BelongsToMany

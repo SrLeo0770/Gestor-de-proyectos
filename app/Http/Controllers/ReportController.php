@@ -10,41 +10,6 @@ use Carbon\Carbon;
 
 class ReportController extends Controller
 {
-    public function createdReports(Request $request)
-    {
-        $query = Project::query();
-
-        if ($request->filled('date')) {
-            $date = Carbon::parse($request->date);
-            $query->whereDate('created_at', $date);
-        }
-
-        if ($request->filled('month')) {
-            $query->whereMonth('created_at', $request->month)
-                  ->whereYear('created_at', $request->year ?? now()->year);
-        }
-
-        if ($request->filled('year')) {
-            $query->whereYear('created_at', $request->year);
-        }
-
-        if (!Auth::user()->isProjectLeader()) {
-            if (Auth::user()->isClient()) {
-                $query->where('client_id', Auth::id());
-            } else {
-                $query->whereHas('teamMembers', function($q) {
-                    $q->where('user_id', Auth::id());
-                });
-            }
-        }
-
-        $projects = $query->with(['projectType', 'category', 'leader', 'client'])
-                         ->latest()
-                         ->get();
-
-        return view('reports.created', compact('projects'));
-    }
-
     public function inProgressReports()
     {
         $query = Project::where('status', 'in-progress');

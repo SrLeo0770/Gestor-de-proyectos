@@ -15,6 +15,32 @@
         </div>
     </div>
 
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Accesos Rápidos</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex gap-2">
+                        <a href="{{ route('team-members.create') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-users"></i> Nuevo Miembro del Equipo
+                        </a>
+                        <a href="{{ route('categories.create') }}" class="btn btn-outline-success">
+                            <i class="fas fa-tags"></i> Nueva Categoría
+                        </a>
+                        <a href="{{ route('clients.create') }}" class="btn btn-outline-info">
+                            <i class="fas fa-user-tie"></i> Nuevo Cliente
+                        </a>
+                        <a href="{{ route('project-types.create') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-project-diagram"></i> Nuevo Tipo de Proyecto
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="card shadow">
         <div class="card-body">
             <div class="table-responsive">

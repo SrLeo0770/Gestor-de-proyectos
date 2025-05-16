@@ -9,7 +9,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('role_id')->after('id')->constrained('roles');
             $table->string('phone')->after('password');
             $table->string('position')->after('phone');
         });
@@ -18,8 +17,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign(['role_id']);
-            $table->dropColumn(['role_id', 'phone', 'position']);
+            $table->dropColumn(['phone', 'position']);
         });
     }
 }; 

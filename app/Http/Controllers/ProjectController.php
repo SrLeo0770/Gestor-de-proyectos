@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Project;
 use App\Models\User;
 use App\Models\ProjectAudit;
+use App\Models\ProjectType;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -47,7 +49,10 @@ class ProjectController extends Controller
             $q->whereNotIn('slug', ['client']);
         })->get();
 
-        return view('projects.create', compact('leaders', 'clients', 'teamMembers'));
+        $projectTypes = ProjectType::all();
+        $categories = Category::all();
+
+        return view('projects.create', compact('leaders', 'clients', 'teamMembers', 'projectTypes', 'categories'));
     }
 
     public function store(Request $request)
@@ -57,13 +62,22 @@ class ProjectController extends Controller
             'description' => 'required|string',
             'leader_id' => 'required|exists:users,id',
             'client_id' => 'required|exists:users,id',
+            'project_type_id' => 'required|exists:project_types,id',
+            'category_id' => 'required|exists:categories,id',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
+            'estimated_time' => 'required|integer|min:1',
+            'team_size' => 'required|integer|min:1',
+            'resources' => 'nullable|string',
+            'services' => 'nullable|string',
             'team_members' => 'required|array|min:1|exists:users,id'
         ]);
 
         $project = Project::create($validated + [
-            'status' => 'pending'
+            'status' => 'pending',
+            'progress' => 0,
+            'resources' => $request->resources ? explode(',', $request->resources) : [],
+            'services' => $request->services ? explode(',', $request->services) : []
         ]);
 
         $project->teamMembers()->attach($request->team_members);

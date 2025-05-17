@@ -10,7 +10,10 @@ class TeamMemberController extends Controller
 {
     public function index()
     {
-        $teamMembers = TeamMember::with('user')->latest()->paginate(10);
+        $teamMembers = TeamMember::with(['user', 'projects' => function($query) {
+            $query->where('status', '!=', 'completed')
+                  ->with(['projectType', 'category']);
+        }])->latest()->paginate(10);
         return view('team-members.index', compact('teamMembers'));
     }
 

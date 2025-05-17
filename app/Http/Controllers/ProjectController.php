@@ -10,28 +10,51 @@ use App\Models\Category;
 use App\Models\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ProjectController extends Controller
 {
     public function index()
     {
+        $user = Auth::user();
         $query = Project::query();
         
-        if (!Auth::user()->isAdmin()) {
-            if (Auth::user()->isClient()) {
-                $query->where('client_id', Auth::id());
-            } elseif (Auth::user()->isProjectLeader()) {
-                $query->where('leader_id', Auth::id());
-            } else {
-                $query->whereHas('teamMembers', function($q) {
-                    $q->where('user_id', Auth::id());
+        // Cargar las relaciones necesarias
+        $query->with(['leader', 'client', 'projectType', 'category', 'teamMembers']);
+
+        // Debug información antes del filtrado
+        \Log::info('Before filtering:', [
+            'user_id' => $user->id,
+            'name' => $user->name,
+            'role' => $user->role->slug ?? 'No role',
+            'total_projects' => Project::count(),
+            'user_team_projects' => DB::table('project_team')->where('user_id', $user->id)->count()
+        ]);
+
+        // Filtrar proyectos según el rol del usuario
+        if (!$user->isAdmin()) {
+            if ($user->isClient()) {
+                $query->where('client_id', $user->id);
+            } elseif ($user->isProjectLeader()) {
+                $query->where('leader_id', $user->id);
+            } elseif ($user->isTeamMember()) {
+                $query->whereExists(function ($subquery) use ($user) {
+                    $subquery->select(DB::raw(1))
+                            ->from('project_team')
+                            ->whereColumn('project_team.project_id', 'projects.id')
+                            ->where('project_team.user_id', $user->id);
                 });
             }
         }
 
-        $projects = $query->with(['leader', 'client'])
-                         ->latest()
-                         ->paginate(10);
+        $projects = $query->latest()->paginate(10);
+
+        // Debug información después del filtrado
+        \Log::info('After filtering:', [
+            'filtered_projects_count' => $projects->count(),
+            'sql' => $query->toSql(),
+            'bindings' => $query->getBindings()
+        ]);
 
         // Obtener datos adicionales para el dashboard
         $teamMembers = User::whereHas('role', function($q) {
@@ -41,12 +64,16 @@ class ProjectController extends Controller
         }])->get();
 
         $categories = Category::withCount('projects')->get();
-        
         $clients = Client::withCount('projects')->get();
-        
         $projectTypes = ProjectType::withCount('projects')->get();
 
-        return view('projects.index', compact('projects', 'teamMembers', 'categories', 'clients', 'projectTypes'));
+        return view('projects.index', compact(
+            'projects', 
+            'teamMembers', 
+            'categories', 
+            'clients', 
+            'projectTypes'
+        ));
     }
 
     public function create()

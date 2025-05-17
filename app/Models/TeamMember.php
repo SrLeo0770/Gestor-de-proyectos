@@ -31,6 +31,7 @@ class TeamMember extends Model
 
     public function projects()
     {
-        return $this->belongsToMany(Project::class, 'project_team_members');
+        return $this->belongsToMany(Project::class, 'project_team', 'user_id', 'project_id')
+                    ->withTimestamps();
     }
 } 

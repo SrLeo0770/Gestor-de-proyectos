@@ -27,6 +27,7 @@
                                     <th>Rol</th>
                                     <th>Departamento</th>
                                     <th>Posición</th>
+                                    <th>Proyectos Activos</th>
                                     <th>Estado</th>
                                     <th>Acciones</th>
                                 </tr>
@@ -38,6 +39,36 @@
                                         <td>{{ $member->role }}</td>
                                         <td>{{ $member->department ?? 'N/A' }}</td>
                                         <td>{{ $member->position }}</td>
+                                        <td>
+                                            @if($member->projects->count() > 0)
+                                                <div class="dropdown">
+                                                    <button class="btn btn-sm btn-outline-primary dropdown-toggle" 
+                                                            type="button" 
+                                                            data-bs-toggle="dropdown" 
+                                                            aria-expanded="false">
+                                                        {{ $member->projects->count() }} Proyecto(s)
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        @foreach($member->projects as $project)
+                                                            <li>
+                                                                <a class="dropdown-item" href="{{ route('projects.show', $project) }}">
+                                                                    <span class="badge bg-{{ $project->status_color }} me-2">
+                                                                        {{ $project->status_label }}
+                                                                    </span>
+                                                                    {{ $project->name }}
+                                                                    <small class="text-muted d-block">
+                                                                        {{ $project->projectType->name }} - 
+                                                                        {{ $project->category->name }}
+                                                                    </small>
+                                                                </a>
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                            @else
+                                                <span class="badge bg-secondary">Sin proyectos</span>
+                                            @endif
+                                        </td>
                                         <td>
                                             <span class="badge bg-{{ $member->is_active ? 'success' : 'danger' }}">
                                                 {{ $member->is_active ? 'Activo' : 'Inactivo' }}
@@ -64,7 +95,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="text-center">No hay miembros registrados</td>
+                                        <td colspan="7" class="text-center">No hay miembros registrados</td>
                                     </tr>
                                 @endforelse
                             </tbody>

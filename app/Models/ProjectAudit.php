@@ -7,7 +7,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ProjectAudit extends Model
 {
-    protected $fillable = ['project_id', 'auditor_id', 'observations', 'changes'];
+    protected $fillable = [
+        'project_id',
+        'auditor_id',
+        'action',
+        'details'
+    ];
 
     protected $casts = [
         'changes' => 'array'

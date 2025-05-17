@@ -1,105 +1,83 @@
+/* Import Bootstrap CSS */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+/* Import Font Awesome */
+@import '@fortawesome/fontawesome-free/css/all.min.css';
+
+/* Custom styles */
 body {
-  font-family: 'Heebo', sans-serif;
-  font-weight: 300;
-  color: black; /* Cambia el color del texto a negro para mejor visibilidad en fondo blanco */
-  margin: 0;
-  text-align: center;
-  background-color: black;
-  cursor: default; /* Cambia el cursor a su estilo predeterminado */
-  overflow: auto; /* Permite el desplazamiento en la página */
+    min-height: 100vh;
+    background-color: #f8f9fa;
+    overflow-x: hidden;
 }
 
-canvas {
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%; 
-}
-
-canvas#backgroundCanvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-}
-
-h1 {
-  font-size: 60px;
-}
-
-.header {
-  top: 40%;
-}
-
-.footer {
-  bottom: 3%;
-}
-
-.description {
-  color: gray;
-  padding-top: 50px;
-}
-
-a, a:hover, a:visited {
-  color: blue; /* Cambia los enlaces a azul para mejor contraste */
-  text-decoration: none;
-}
-
-.disable-selection {
-  user-select: none; /* Standard property for compatibility */
-  -moz-user-select: none;        /* Firefox */
-  -ms-user-select: none;         /* Internet Explorer */
-  -khtml-user-select: none;      /* KHTML browsers (e.g. Konqueror) */
-  -webkit-user-select: none;     /* Chrome, Safari, and Opera */
-  -webkit-touch-callout: none;   /* Disable Android and iOS callouts */
-}
-
-h1::after {
-  content: ''; /* Elimina el texto adicional */
-}
-
-#backgroundCanvas {
+#particles-js {
     position: fixed;
+    width: 100vw;
+    height: 100vh;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1; /* Envía el canvas al fondo */
-    pointer-events: none; /* Evita que interfiera con el cursor */
+    z-index: 0;
+    background-color: #f8f9fa;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    color: black; /* Asegura que los encabezados también sean visibles */
+.main-content {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+}
+
+.container {
+    position: relative;
+    z-index: 1;
 }
 
 .card {
-    transition: transform 0.3s ease-in-out; /* Suaviza la transición */
-}
-
-.card:hover {
-    transform: scale(1.1); /* Aumenta el tamaño al pasar el cursor */
-}
-
-.btn-warning {
-    background-color: #ffc107; /* Amarillo suave */
-    color: black; /* Texto negro para contraste */
+    background-color: rgba(255, 255, 255, 0.95);
     border: none;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
-.btn-warning:hover {
-    background-color: #e0a800; /* Amarillo más oscuro al pasar el cursor */
+.navbar {
+    position: relative;
+    z-index: 2;
+    background-color: rgba(33, 37, 41, 0.95) !important;
+    backdrop-filter: blur(10px);
 }
 
-.btn-danger {
-    background-color: #dc3545; /* Rojo suave */
-    color: white; /* Texto blanco para contraste */
-    border: none;
+.dropdown-menu {
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
 }
 
-.btn-danger:hover {
-    background-color: #c82333; /* Rojo más oscuro al pasar el cursor */
+.dropdown-item:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0b5ed7;
+}
+
+.alert {
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(5px);
+}
+
+.form-control {
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+.form-control:focus {
+    background-color: rgba(255, 255, 255, 1);
+}
+
+.table {
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(5px);
 }

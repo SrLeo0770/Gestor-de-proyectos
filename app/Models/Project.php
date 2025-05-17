@@ -34,6 +34,34 @@ class Project extends Model
         'progress' => 'integer'
     ];
 
+    public function getStatusColorAttribute()
+    {
+        return match($this->status) {
+            'completed' => 'success',
+            'in-progress' => 'primary',
+            'on_hold' => 'warning',
+            'cancelled' => 'danger',
+            default => 'secondary'
+        };
+    }
+
+    public function getStatusLabelAttribute()
+    {
+        return match($this->status) {
+            'completed' => 'Completado',
+            'in-progress' => 'En Progreso',
+            'pending' => 'Pendiente',
+            'on_hold' => 'En Espera',
+            'cancelled' => 'Cancelado',
+            default => ucfirst($this->status)
+        };
+    }
+
+    public function getLastAuditAttribute()
+    {
+        return $this->audits()->latest()->first()?->created_at;
+    }
+
     public function leader(): BelongsTo
     {
         return $this->belongsTo(User::class, 'leader_id');
@@ -41,7 +69,7 @@ class Project extends Model
 
     public function client(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'client_id');
+        return $this->belongsTo(Client::class, 'client_id');
     }
 
     public function projectType(): BelongsTo

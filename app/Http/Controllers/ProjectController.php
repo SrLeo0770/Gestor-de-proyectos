@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\ProjectAudit;
 use App\Models\ProjectType;
 use App\Models\Category;
+use App\Models\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -32,7 +33,20 @@ class ProjectController extends Controller
                          ->latest()
                          ->paginate(10);
 
-        return view('projects.index', compact('projects'));
+        // Obtener datos adicionales para el dashboard
+        $teamMembers = User::whereHas('role', function($q) {
+            $q->whereNotIn('slug', ['client', 'admin']);
+        })->withCount(['teamProjects' => function($query) {
+            $query->where('status', '!=', 'completed');
+        }])->get();
+
+        $categories = Category::withCount('projects')->get();
+        
+        $clients = Client::withCount('projects')->get();
+        
+        $projectTypes = ProjectType::withCount('projects')->get();
+
+        return view('projects.index', compact('projects', 'teamMembers', 'categories', 'clients', 'projectTypes'));
     }
 
     public function create()
@@ -41,12 +55,10 @@ class ProjectController extends Controller
             $q->where('slug', 'project_leader');
         })->get();
 
-        $clients = User::whereHas('role', function($q) {
-            $q->where('slug', 'client');
-        })->get();
+        $clients = Client::all();
 
         $teamMembers = User::whereHas('role', function($q) {
-            $q->whereNotIn('slug', ['client']);
+            $q->whereNotIn('slug', ['client', 'admin']);
         })->get();
 
         $projectTypes = ProjectType::all();
@@ -61,7 +73,7 @@ class ProjectController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'leader_id' => 'required|exists:users,id',
-            'client_id' => 'required|exists:users,id',
+            'client_id' => 'required|exists:clients,id',
             'project_type_id' => 'required|exists:project_types,id',
             'category_id' => 'required|exists:categories,id',
             'start_date' => 'required|date',
@@ -87,7 +99,7 @@ class ProjectController extends Controller
             'project_id' => $project->id,
             'auditor_id' => Auth::id(),
             'action' => 'create',
-            'details' => 'Proyecto creado'
+            'details' => 'Proyecto creado: ' . $project->name
         ]);
 
         return redirect()->route('projects.index')
@@ -106,9 +118,7 @@ class ProjectController extends Controller
             $q->where('slug', 'project_leader');
         })->get();
 
-        $clients = User::whereHas('role', function($q) {
-            $q->where('slug', 'client');
-        })->get();
+        $clients = Client::all();
 
         $teamMembers = User::whereHas('role', function($q) {
             $q->whereNotIn('slug', ['client']);
@@ -123,7 +133,7 @@ class ProjectController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'leader_id' => 'required|exists:users,id',
-            'client_id' => 'required|exists:users,id',
+            'client_id' => 'required|exists:clients,id',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
             'status' => 'required|in:pending,in-progress,completed',
@@ -140,7 +150,7 @@ class ProjectController extends Controller
                 'project_id' => $project->id,
                 'auditor_id' => Auth::id(),
                 'action' => 'status_change',
-                'details' => "Estado cambiado de {$oldStatus} a {$validated['status']}"
+                'details' => "Estado del proyecto '{$project->name}' cambiado de {$oldStatus} a {$validated['status']}"
             ]);
         }
 

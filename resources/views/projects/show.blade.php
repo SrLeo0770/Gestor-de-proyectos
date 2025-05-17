@@ -110,10 +110,14 @@
                     <div class="row mt-4">
                         <div class="col-md-6">
                             <h4>Recursos Necesarios</h4>
-                            @if($project->resources && count($project->resources) > 0)
+                            @php
+                                $resourcesArray = is_array($project->resources) ? $project->resources : 
+                                    (!empty($project->resources) ? explode(',', $project->resources) : []);
+                            @endphp
+                            @if(!empty($resourcesArray))
                                 <ul class="list-group">
-                                    @foreach($project->resources as $resource)
-                                        <li class="list-group-item">{{ $resource }}</li>
+                                    @foreach($resourcesArray as $resource)
+                                        <li class="list-group-item">{{ trim($resource) }}</li>
                                     @endforeach
                                 </ul>
                             @else
@@ -123,10 +127,14 @@
 
                         <div class="col-md-6">
                             <h4>Servicios Requeridos</h4>
-                            @if($project->services && count($project->services) > 0)
+                            @php
+                                $servicesArray = is_array($project->services) ? $project->services : 
+                                    (!empty($project->services) ? explode(',', $project->services) : []);
+                            @endphp
+                            @if(!empty($servicesArray))
                                 <ul class="list-group">
-                                    @foreach($project->services as $service)
-                                        <li class="list-group-item">{{ $service }}</li>
+                                    @foreach($servicesArray as $service)
+                                        <li class="list-group-item">{{ trim($service) }}</li>
                                     @endforeach
                                 </ul>
                             @else

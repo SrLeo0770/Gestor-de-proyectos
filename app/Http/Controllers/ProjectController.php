@@ -121,10 +121,13 @@ class ProjectController extends Controller
         $clients = Client::all();
 
         $teamMembers = User::whereHas('role', function($q) {
-            $q->whereNotIn('slug', ['client']);
+            $q->whereNotIn('slug', ['client', 'admin']);
         })->get();
 
-        return view('projects.edit', compact('project', 'leaders', 'clients', 'teamMembers'));
+        $projectTypes = ProjectType::all();
+        $categories = Category::all();
+
+        return view('projects.edit', compact('project', 'leaders', 'clients', 'teamMembers', 'projectTypes', 'categories'));
     }
 
     public function update(Request $request, Project $project)
@@ -134,14 +137,28 @@ class ProjectController extends Controller
             'description' => 'required|string',
             'leader_id' => 'required|exists:users,id',
             'client_id' => 'required|exists:clients,id',
+            'project_type_id' => 'required|exists:project_types,id',
+            'category_id' => 'required|exists:categories,id',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
-            'status' => 'required|in:pending,in-progress,completed',
+            'status' => 'required|in:pending,in_progress,completed,on_hold,cancelled',
+            'progress' => 'required|integer|min:0|max:100',
+            'estimated_time' => 'required|integer|min:1',
+            'team_size' => 'required|integer|min:1',
+            'resources' => 'nullable|string',
+            'services' => 'nullable|string',
             'team_members' => 'required|array|min:1|exists:users,id'
         ]);
 
         $oldStatus = $project->status;
-        $project->update($validated);
+        
+        // Handle resources and services
+        $projectData = array_merge($validated, [
+            'resources' => $request->resources ? explode(',', $request->resources) : [],
+            'services' => $request->services ? explode(',', $request->services) : []
+        ]);
+
+        $project->update($projectData);
         $project->teamMembers()->sync($request->team_members);
 
         // Registrar cambios en la auditoría

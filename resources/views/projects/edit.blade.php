@@ -66,14 +66,31 @@
                                     <select class="form-select @error('leader_id') is-invalid @enderror" 
                                             id="leader_id" name="leader_id" required>
                                         <option value="">Seleccione un líder</option>
-                                        @foreach($users as $user)
-                                            <option value="{{ $user->id }}" 
-                                                {{ old('leader_id', $project->leader_id) == $user->id ? 'selected' : '' }}>
-                                                {{ $user->name }}
+                                        @foreach($leaders as $leader)
+                                            <option value="{{ $leader->id }}" 
+                                                {{ old('leader_id', $project->leader_id) == $leader->id ? 'selected' : '' }}>
+                                                {{ $leader->name }}
                                             </option>
                                         @endforeach
                                     </select>
                                     @error('leader_id')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="team_members" class="form-label">Miembros del Equipo *</label>
+                                    <select class="form-select @error('team_members') is-invalid @enderror" 
+                                            id="team_members" name="team_members[]" multiple required>
+                                        @foreach($teamMembers as $member)
+                                            <option value="{{ $member->id }}" 
+                                                {{ (old('team_members') && in_array($member->id, old('team_members'))) || 
+                                                   $project->teamMembers->contains($member->id) ? 'selected' : '' }}>
+                                                {{ $member->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('team_members')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>

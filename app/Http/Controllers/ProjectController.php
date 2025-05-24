@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Project;
 use App\Models\User;
 use App\Models\ProjectAudit;
-use App\Models\ProjectType;
 use App\Models\Category;
 use App\Models\Client;
 use Illuminate\Http\Request;
@@ -20,7 +19,7 @@ class ProjectController extends Controller
         $query = Project::query();
         
         // Cargar las relaciones necesarias
-        $query->with(['leader', 'client', 'projectType', 'category', 'teamMembers']);
+        $query->with(['leader', 'client', 'category', 'teamMembers']);
 
         // Debug información antes del filtrado
         \Log::info('Before filtering:', [
@@ -65,33 +64,18 @@ class ProjectController extends Controller
 
         $categories = Category::withCount('projects')->get();
         $clients = Client::withCount('projects')->get();
-        $projectTypes = ProjectType::withCount('projects')->get();
 
         return view('projects.index', compact(
             'projects', 
             'teamMembers', 
             'categories', 
-            'clients', 
-            'projectTypes'
+            'clients'
         ));
     }
 
     public function create()
     {
-        $leaders = User::whereHas('role', function($q) {
-            $q->where('slug', 'project_leader');
-        })->get();
-
-        $clients = Client::all();
-
-        $teamMembers = User::whereHas('role', function($q) {
-            $q->whereNotIn('slug', ['client', 'admin']);
-        })->get();
-
-        $projectTypes = ProjectType::all();
-        $categories = Category::all();
-
-        return view('projects.create', compact('leaders', 'clients', 'teamMembers', 'projectTypes', 'categories'));
+        return view('projects.create');
     }
 
     public function store(Request $request)
@@ -101,7 +85,6 @@ class ProjectController extends Controller
             'description' => 'required|string',
             'leader_id' => 'required|exists:users,id',
             'client_id' => 'required|exists:clients,id',
-            'project_type_id' => 'required|exists:project_types,id',
             'category_id' => 'required|exists:categories,id',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
@@ -151,10 +134,9 @@ class ProjectController extends Controller
             $q->whereNotIn('slug', ['client', 'admin']);
         })->get();
 
-        $projectTypes = ProjectType::all();
         $categories = Category::all();
 
-        return view('projects.edit', compact('project', 'leaders', 'clients', 'teamMembers', 'projectTypes', 'categories'));
+        return view('projects.edit', compact('project', 'leaders', 'clients', 'teamMembers', 'categories'));
     }
 
     public function update(Request $request, Project $project)
@@ -164,7 +146,6 @@ class ProjectController extends Controller
             'description' => 'required|string',
             'leader_id' => 'required|exists:users,id',
             'client_id' => 'required|exists:clients,id',
-            'project_type_id' => 'required|exists:project_types,id',
             'category_id' => 'required|exists:categories,id',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',

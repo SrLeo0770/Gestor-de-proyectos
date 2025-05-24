@@ -14,7 +14,6 @@ class Project extends Model
         'description',
         'leader_id',
         'client_id',
-        'project_type_id',
         'category_id',
         'start_date',
         'end_date',
@@ -70,11 +69,6 @@ class Project extends Model
     public function client(): BelongsTo
     {
         return $this->belongsTo(Client::class, 'client_id');
-    }
-
-    public function projectType(): BelongsTo
-    {
-        return $this->belongsTo(ProjectType::class);
     }
 
     public function category(): BelongsTo

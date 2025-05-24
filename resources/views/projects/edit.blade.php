@@ -28,23 +28,6 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="project_type_id" class="form-label">Tipo de Proyecto *</label>
-                                    <select class="form-select @error('project_type_id') is-invalid @enderror" 
-                                            id="project_type_id" name="project_type_id" required>
-                                        <option value="">Seleccione un tipo</option>
-                                        @foreach($projectTypes as $type)
-                                            <option value="{{ $type->id }}" 
-                                                {{ old('project_type_id', $project->project_type_id) == $type->id ? 'selected' : '' }}>
-                                                {{ $type->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('project_type_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-3">
                                     <label for="category_id" class="form-label">Categoría *</label>
                                     <select class="form-select @error('category_id') is-invalid @enderror" 
                                             id="category_id" name="category_id" required>
@@ -211,11 +194,11 @@
                         </div>
 
                         <div class="d-flex justify-content-between">
-                            <a href="{{ route('projects.index') }}" class="btn btn-secondary">
+                            <a href="{{ route('projects.show', $project) }}" class="btn btn-secondary">
                                 <i class="fas fa-arrow-left"></i> Volver
                             </a>
                             <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i> Actualizar Proyecto
+                                <i class="fas fa-save"></i> Guardar Cambios
                             </button>
                         </div>
                     </form>

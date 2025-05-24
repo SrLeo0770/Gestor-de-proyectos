@@ -6,7 +6,7 @@
 <div class="container">
     <!-- Dashboard Cards -->
     <div class="row mb-4">
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="card h-100">
                 <div class="card-header bg-primary text-white">
                     <h5 class="card-title mb-0">
@@ -30,7 +30,7 @@
             </div>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="card h-100">
                 <div class="card-header bg-success text-white">
                     <h5 class="card-title mb-0">
@@ -50,7 +50,7 @@
             </div>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="card h-100">
                 <div class="card-header bg-info text-white">
                     <h5 class="card-title mb-0">
@@ -63,26 +63,6 @@
                             <div class="list-group-item d-flex justify-content-between align-items-center">
                                 {{ $client->name }}
                                 <span class="badge bg-info rounded-pill">{{ $client->projects_count }}</span>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card h-100">
-                <div class="card-header bg-warning text-dark">
-                    <h5 class="card-title mb-0">
-                        <i class="fas fa-project-diagram"></i> Tipos de Proyectos
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="list-group list-group-flush">
-                        @foreach($projectTypes as $type)
-                            <div class="list-group-item d-flex justify-content-between align-items-center">
-                                {{ $type->name }}
-                                <span class="badge bg-warning text-dark rounded-pill">{{ $type->projects_count }}</span>
                             </div>
                         @endforeach
                     </div>

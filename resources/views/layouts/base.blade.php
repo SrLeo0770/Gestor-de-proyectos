@@ -10,6 +10,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     @vite(['resources/css/app.css'])
     @stack('styles')
+    @livewireStyles
 </head>
 <body>
     <div id="particles-js"></div>
@@ -81,6 +82,7 @@
             });
         });
     </script>
+    @livewireScripts
     @stack('scripts')
 </body>
 </html> 

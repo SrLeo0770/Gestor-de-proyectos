@@ -30,10 +30,6 @@
                             <h4>Información General</h4>
                             <table class="table">
                                 <tr>
-                                    <th>Tipo de Proyecto:</th>
-                                    <td>{{ $project->projectType->name }}</td>
-                                </tr>
-                                <tr>
                                     <th>Categoría:</th>
                                     <td>
                                         <span class="badge" style="background-color: {{ $project->category->color }}">

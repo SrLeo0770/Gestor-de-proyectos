@@ -32,6 +32,8 @@ Route::middleware('auth')->group(function () {
 
     // Project Routes
     Route::resource('projects', ProjectController::class);
+    // Ticket de proyecto (impresión 58mm)
+    Route::get('projects/{project}/ticket', [ProjectController::class, 'ticket'])->name('projects.ticket');
 
     // Report Routes
     Route::prefix('reports')->group(function () {
@@ -51,5 +53,5 @@ Route::middleware('auth')->group(function () {
     Route::resource('categories', CategoryController::class);
 
     // Rutas para tipos de proyecto
-    Route::resource('project-types', ProjectTypeController::class);
+    // Route::resource('project-types', ProjectTypeController::class); // Comentada porque el controlador no existe
 });

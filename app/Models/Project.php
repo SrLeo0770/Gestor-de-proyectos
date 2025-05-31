@@ -37,7 +37,7 @@ class Project extends Model
     {
         return match($this->status) {
             'completed' => 'success',
-            'in-progress' => 'primary',
+            'in_progress' => 'primary',
             'on_hold' => 'warning',
             'cancelled' => 'danger',
             default => 'secondary'
@@ -48,7 +48,7 @@ class Project extends Model
     {
         return match($this->status) {
             'completed' => 'Completado',
-            'in-progress' => 'En Progreso',
+            'in_progress' => 'En Progreso',
             'pending' => 'Pendiente',
             'on_hold' => 'En Espera',
             'cancelled' => 'Cancelado',

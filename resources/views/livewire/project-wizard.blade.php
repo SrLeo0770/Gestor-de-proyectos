@@ -118,6 +118,20 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
+
+                            <div class="mb-3">
+                                <label for="status" class="form-label">Estado del Proyecto *</label>
+                                <select class="form-select @error('status') is-invalid @enderror" wire:model="status" id="status">
+                                    <option value="in_progress">En Progreso</option>
+                                    <option value="pending">Pendiente</option>
+                                    <option value="completed">Completado</option>
+                                    <option value="on_hold">En Espera</option>
+                                    <option value="cancelled">Cancelado</option>
+                                </select>
+                                @error('status')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
                         @endif
 
@@ -304,6 +318,33 @@
                                     </dl>
                                 </div>
                             </div>
+
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">Correos de Notificación Manuales</h5>
+                                    <div class="mb-3">
+                                        <label for="manual_client_email" class="form-label">Correo del Cliente (opcional)</label>
+                                        <input type="email" class="form-control @error('manual_client_email') is-invalid @enderror" wire:model="manual_client_email" id="manual_client_email" placeholder="cliente@email.com">
+                                        @error('manual_client_email')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="manual_leader_email" class="form-label">Correo del Líder (opcional)</label>
+                                        <input type="email" class="form-control @error('manual_leader_email') is-invalid @enderror" wire:model="manual_leader_email" id="manual_leader_email" placeholder="lider@email.com">
+                                        @error('manual_leader_email')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="manual_member_emails" class="form-label">Correos de Miembros (opcional, separados por coma)</label>
+                                        <input type="text" class="form-control @error('manual_member_emails') is-invalid @enderror" wire:model="manual_member_emails" id="manual_member_emails" placeholder="miembro1@email.com, miembro2@email.com">
+                                        @error('manual_member_emails')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         @endif
 
@@ -332,4 +373,4 @@
             </div>
         </div>
     </div>
-</div> 
+</div>

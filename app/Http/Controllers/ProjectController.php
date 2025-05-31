@@ -189,4 +189,10 @@ class ProjectController extends Controller
         return redirect()->route('projects.index')
                         ->with('success', 'Proyecto eliminado exitosamente.');
     }
+
+    public function ticket(Project $project)
+    {
+        $project->load(['leader', 'client', 'category']);
+        return view('projects.ticket', compact('project'));
+    }
 }

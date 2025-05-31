@@ -1,32 +1,28 @@
+@php
+use Illuminate\Support\Str;
+@endphp
+
 @extends('layouts.app')
 
 @section('title', 'Ticket de Proyecto')
 
 @section('content')
 <div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
-    <div id="ticket" class="bg-white p-3" style="width: 58mm; min-width: 58mm; max-width: 58mm; border: 1px dashed #333; font-family: 'Courier New', Courier, monospace;">
-        <div class="text-center mb-2">
-            <h5 style="font-size: 1.1em; margin-bottom: 0.2em;">PROYECTO CREADO</h5>
+    <div id="ticket" class="bg-white p-2" style="width: 58mm; min-width: 58mm; max-width: 58mm; border: 1px dashed #333; font-family: 'Courier New', Courier, monospace; font-size: 0.8em;">
+        <div class="text-center mb-1">
+            <h6 class="mb-0" style="font-size: 1em;">PROYECTO CREADO</h6>
             <small>{{ now()->format('d/m/Y H:i') }}</small>
         </div>
-        <hr style="margin: 0.3em 0;">
-        <div style="font-size: 0.95em;">
-            <b>Nombre:</b> {{ $project->name }}<br>
-            <b>Categoría:</b> {{ $project->category->name ?? '-' }}<br>
-            <b>Líder:</b> {{ $project->leader->name ?? '-' }}<br>
-            <b>Cliente:</b> {{ $project->client->name ?? '-' }}<br>
-            <b>Inicio:</b> {{ $project->start_date }}<br>
-            <b>Fin:</b> {{ $project->end_date }}<br>
-            <b>Estado:</b> {{ ucfirst($project->status) }}<br>
+        <hr style="margin: 0.2em 0;">
+        <div>
+            <b>ID:</b> {{ str_pad($project->id, 4, '0', STR_PAD_LEFT) }}<br>
+            <b>Nombre:</b> {{ str($project->name)->limit(20) }}<br>
+            <b>Cliente:</b> {{ str($project->client->name ?? '-')->limit(20) }}<br>
+            <b>Líder:</b> {{ str($project->leader->name ?? '-')->limit(20) }}
         </div>
-        <hr style="margin: 0.3em 0;">
-        <div style="font-size: 0.9em;">
-            <b>Descripción:</b><br>
-            <span>{{ $project->description }}</span>
-        </div>
-        <hr style="margin: 0.3em 0;">
-        <div class="text-center" style="font-size: 0.9em;">
-            <span>¡Gracias por registrar su proyecto!</span>
+        <hr style="margin: 0.2em 0;">
+        <div class="text-center" style="font-size: 0.8em;">
+            <span>¡Gracias por su confianza!</span>
         </div>
     </div>
 </div>

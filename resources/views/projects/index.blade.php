@@ -108,8 +108,8 @@
                                     <td>{{ $project->leader->name }}</td>
                                     <td>{{ $project->client->name }}</td>
                                     <td>
-                                        <span class="badge bg-{{ $project->status == 'completed' ? 'success' : ($project->status == 'in-progress' ? 'primary' : 'secondary') }}">
-                                            {{ ucfirst($project->status) }}
+                                        <span class="badge bg-{{ $project->status_color }}">
+                                            {{ $project->status_label }}
                                         </span>
                                     </td>
                                     <td>

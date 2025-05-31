@@ -8,16 +8,11 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('phone')->after('password');
-            $table->string('position')->after('phone');
-        });
+        // Las columnas 'phone' y 'position' ya existen en la tabla 'users', no es necesario agregarlas de nuevo.
     }
 
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['phone', 'position']);
-        });
+        // Las columnas 'phone' y 'position' ya existen en la tabla 'users', no es necesario eliminarlas aquí.
     }
-}; 
+};

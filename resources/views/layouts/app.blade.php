@@ -35,11 +35,11 @@
                                     <i class="fas fa-user-tie"></i> Nuevo Cliente
                                 </a>
                             </li>
-                            <li>
+                            {{-- <li>
                                 <a class="dropdown-item" href="{{ route('project-types.create') }}">
                                     <i class="fas fa-project-diagram"></i> Nuevo Tipo de Proyecto
                                 </a>
-                            </li>
+                            </li> --}}
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <a class="dropdown-item" href="{{ route('projects.create') }}">
@@ -150,4 +150,4 @@
         });
     </script>
     @endpush
-@endsection 
+@endsection

@@ -11,12 +11,26 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('projects', function (Blueprint $table) {
-            $table->dropForeign(['project_type_id']);
-            $table->dropColumn('project_type_id');
-        });
-
-        Schema::dropIfExists('project_types');
+        // Solo eliminar si existe la columna
+        if (Schema::hasColumn('projects', 'project_type_id')) {
+            Schema::table('projects', function (Blueprint $table) {
+                // Laravel no siempre nombra igual las foreign keys, así que mejor usar try/catch
+                try {
+                    $table->dropForeign(['project_type_id']);
+                } catch (\Exception $e) {
+                    // Si la foreign key no existe, ignorar el error
+                }
+                try {
+                    $table->dropColumn('project_type_id');
+                } catch (\Exception $e) {
+                    // Si la columna ya no existe, ignorar el error
+                }
+            });
+        }
+        // Solo eliminar la tabla si existe
+        if (Schema::hasTable('project_types')) {
+            Schema::dropIfExists('project_types');
+        }
     }
 
     /**

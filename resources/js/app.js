@@ -1,4 +1,7 @@
-// Import Bootstrap
+// Import Bootstrap CSS
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+// Import Bootstrap JS
 import 'bootstrap';
 
 // Import all of Bootstrap's JS
@@ -38,6 +41,9 @@ document.addEventListener('DOMContentLoaded', function() {
         new bootstrap.Alert(alert);
     });
 });
+
+// Import custom styles
+import '../css/app.css';
 
 // Import main application logic if needed
 // import './main.js'; 
